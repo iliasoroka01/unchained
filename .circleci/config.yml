@@ -1080,7 +1080,6 @@ jobs:
           name: pulumi
           working_directory: monitoring/src
           command: |
-            echo 'export ADDITIONAL_ROOT_DOMAIN_NAME=$<< parameters.organization >>_ADDITIONAL_ROOT_DOMAIN_NAME' >> $BASH_ENV
             pulumi stack select $<< parameters.organization >>_PULUMI_ORG/prod-us-east-2
             pulumi config set --path unchained:monitoring.stack $<< parameters.organization >>_PULUMI_ORG/common/dependencies-us-east-2
             pulumi config set --path unchained:monitoring.environment monitoring
@@ -1343,7 +1342,7 @@ workflows:
           pulumi-command: preview
           requires:
             - lint and test project (persist to workplace)
-          <<: *only-develop
+          # <<: *only-develop
 
       - approve-monitoring:
           name: approve
