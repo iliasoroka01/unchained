@@ -30,7 +30,7 @@ export const getConfig = async (): Promise<LoopConfig> => {
   const domain = (await stackReference.getOutputValue('rootDomainName')) as string
   const additionalDomain = process.env.ADDITIONAL_ROOT_DOMAIN_NAME
 
-  console.log(`cfg: `, additionalDomain)
+  console.log(`cfg: `, additionalDomain, additionalDomain?.length)
 
   const namespace = config.environment ? `${defaultNamespace}-${config.environment}` : defaultNamespace
   if (!namespaces.includes(namespace)) {
