@@ -46,8 +46,6 @@ export class Ingress extends pulumi.ComponentResource {
       ? `Host(\`monitoring.${args.domain}\`) || Host(\`monitoring.${args.additionalDomain}\`)`
       : `Host(\`monitoring.${args.domain}\`)`
 
-    console.log(`Domains: ${domains.split('').join('')}`, domains.length)
-
     new k8s.apiextensions.CustomResource(
       `${name}-grafana-ingressroute`,
       {
