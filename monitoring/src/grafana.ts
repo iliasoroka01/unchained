@@ -42,6 +42,8 @@ export class Ingress extends pulumi.ComponentResource {
       { ...opts }
     )
 
+    console.log(`Arg: `, args.additionalDomain)
+
     const domains = args.additionalDomain
       ? `Host(\`monitoring.${args.domain}\`)` || `Host(\`monitoring.${args.additionalDomain}\`)`
       : `Host(\`monitoring.${args.domain}\`)`
