@@ -709,8 +709,8 @@ commands:
       - run:
           name: add environment variables
           command: |
-            echo 'export ADDITIONAL_ROOT_DOMAIN_NAME=$<< parameters.organization >>_ADDITIONAL_ROOT_DOMAIN_NAME' >> $BASH_ENV
-            echo 'export PULUMI_ACCESS_TOKEN=$<< parameters.organization >>_PULUMI_ACCESS_TOKEN' >> $BASH_ENV
+            echo 'export ADDITIONAL_ROOT_DOMAIN_NAME=$ADDITIONAL_ROOT_DOMAIN_NAME' >> $BASH_ENV
+            echo 'export PULUMI_ACCESS_TOKEN=$PULUMI_ACCESS_TOKEN' >> $BASH_ENV
             echo 'export IPFS_CLUSTER_SECRET=$IPFS_CLUSTER_SECRET' >> $BASH_ENV
             echo 'export IPFS_CLUSTER_PRIV_KEY=$IPFS_CLUSTER_PRIV_KEY' >> $BASH_ENV
       - run:
@@ -740,8 +740,8 @@ commands:
           command: |
             mkdir ~/.aws
             echo [default] > ~/.aws/credentials
-            echo aws_access_key_id = $<< parameters.organization >>_AWS_ACCESS_KEY_ID >> ~/.aws/credentials
-            echo aws_secret_access_key = $<< parameters.organization >>_AWS_SECRET_ACCESS_KEY >> ~/.aws/credentials
+            echo aws_access_key_id = $AWS_ACCESS_KEY_ID >> ~/.aws/credentials
+            echo aws_secret_access_key = $AWS_SECRET_ACCESS_KEY >> ~/.aws/credentials
     
   pulumi-dependencies:
     description: set up pulumi dependencies
@@ -796,7 +796,7 @@ jobs:
           name: pulumi
           working_directory: pulumi/src/cluster
           command: |
-            pulumi stack select $<< parameters.organization >>_PULUMI_ORG/dependencies-us-east-2
+            pulumi stack select $PULUMI_ORG/dependencies-us-east-2
             pulumi config set --path unchained:common.cluster eks
             pulumi config set --path unchained:common.additionalEnvironments[0] dev
             pulumi config set --path unchained:common.additionalEnvironments[1] monitoring
@@ -844,7 +844,7 @@ jobs:
             pulumi config set --path unchained:common.dockerhub.username $DOCKERHUB_USERNAME
             pulumi config set --path unchained:common.dockerhub.password $DOCKERHUB_PASSWORD --plaintext
             pulumi config set --path unchained:common.dockerhub.server docker.io
-            pulumi config set --path unchained:common.rootDomainName $<< parameters.organization >>_ROOT_DOMAIN_NAME
+            pulumi config set --path unchained:common.rootDomainName $ROOT_DOMAIN_NAME
             pulumi <<parameters.pulumi-command>> --suppress-outputs
 
   deploy-coinstack-node:
@@ -883,9 +883,9 @@ jobs:
           name: pulumi
           working_directory: node/<< parameters.pulumi-dir >>
           command: |
-            pulumi stack select $<< parameters.organization >>_PULUMI_ORG/<< parameters.pulumi-stack >>
+            pulumi stack select $PULUMI_ORG/<< parameters.pulumi-stack >>
             pulumi config set --path unchained:coinstack.assetName << parameters.assetName >>
-            pulumi config set --path unchained:coinstack.stack $<< parameters.organization >>_PULUMI_ORG/common/dependencies-us-east-2
+            pulumi config set --path unchained:coinstack.stack $PULUMI_ORG/common/dependencies-us-east-2
             [ -n "<< parameters.environment >>" ] && pulumi config set --path unchained:coinstack.environment << parameters.environment >>
             pulumi config set --path unchained:coinstack.network << parameters.network >>
             [ "<< parameters.api >>" = true ] && pulumi config set --path unchained:coinstack.api.autoscaling.enabled << parameters.api-autoscaling >>
@@ -957,9 +957,9 @@ jobs:
           working_directory: go/<< parameters.pulumi-dir >>
           command: |
             yarn install --immutable
-            pulumi stack select $<< parameters.organization >>_PULUMI_ORG/<< parameters.pulumi-stack >>
+            pulumi stack select $PULUMI_ORG/<< parameters.pulumi-stack >>
             pulumi config set --path unchained:coinstack.assetName << parameters.assetName >>
-            pulumi config set --path unchained:coinstack.stack $<< parameters.organization >>_PULUMI_ORG/common/dependencies-us-east-2
+            pulumi config set --path unchained:coinstack.stack $PULUMI_ORG/common/dependencies-us-east-2
             [ -n "<< parameters.environment >>" ] && pulumi config set --path unchained:coinstack.environment << parameters.environment >>
             pulumi config set --path unchained:coinstack.network << parameters.network >>
             [ "<< parameters.api >>" = true ] && pulumi config set --path unchained:coinstack.api.autoscaling.enabled << parameters.api-autoscaling >>
@@ -1016,8 +1016,8 @@ jobs:
           name: pulumi
           working_directory: monitoring/src
           command: |
-            pulumi stack select $<< parameters.organization >>_PULUMI_ORG/prod-us-east-2
-            pulumi config set --path unchained:monitoring.stack $<< parameters.organization >>_PULUMI_ORG/common/dependencies-us-east-2
+            pulumi stack select $PULUMI_ORG/prod-us-east-2
+            pulumi config set --path unchained:monitoring.stack $PULUMI_ORG/common/dependencies-us-east-2
             pulumi config set --path unchained:monitoring.environment monitoring
             pulumi <<parameters.pulumi-command>> --suppress-outputs
 
